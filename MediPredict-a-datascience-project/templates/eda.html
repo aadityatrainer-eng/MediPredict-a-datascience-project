@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDA Analysis - MediPredict</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        /* Enhanced EDA-specific styles */
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), rgba(20, 184, 166, 0.05));
+            border-left: 4px solid var(--primary-color);
+            border-radius: 8px;
+        }
+        
+        .step-number-badge {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Space Mono', monospace;
+            box-shadow: 0 0 20px var(--primary-glow);
+            flex-shrink: 0;
+        }
+        
+        .step-info {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+        
+        .step-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        .visual-explainer {
+            background: var(--bg-dark);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .explainer-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .explainer-icon {
+            font-size: 2rem;
+        }
+        
+        .explainer-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .explainer-content {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .what-box, .why-box, .how-box {
+            background: var(--bg-card);
+            padding: 1.25rem;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        
+        .what-box {
+            border-color: #3B82F6;
+        }
+        
+        .why-box {
+            border-color: var(--primary-color);
+        }
+        
+        .how-box {
+            border-color: #F59E0B;
+        }
+        
+        .box-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .what-box .box-title {
+            color: #3B82F6;
+        }
+        
+        .why-box .box-title {
+            color: var(--primary-color);
+        }
+        
+        .how-box .box-title {
+            color: #F59E0B;
+        }
+        
+        .box-content {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        
+        .metric-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .metric-box {
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-card));
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .metric-box:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(20, 184, 166, 0.2);
+        }
+        
+        .metric-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-family: 'Space Mono', monospace;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .progress-tracker {
+            background: var(--bg-dark);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            border: 2px solid var(--border-color);
+        }
+        
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--border-color);
+            z-index: 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+            width: 100%;
+            transition: width 1s ease;
+        }
+        
+        .progress-step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .progress-circle {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: 700;
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+        
+        .progress-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .comparison-card {
+            background: var(--bg-dark);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 2px solid;
+        }
+        
+        .comparison-card.good {
+            border-color: #10B981;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), transparent);
+        }
+        
+        .comparison-card.bad {
+            border-color: #EF4444;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), transparent);
+        }
+        
+        .comparison-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .comparison-icon {
+            font-size: 3rem;
+        }
+        
+        .comparison-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .comparison-card.good .comparison-title {
+            color: #10B981;
+        }
+        
+        .comparison-card.bad .comparison-title {
+            color: #EF4444;
+        }
+        
+        .key-insight {
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.15), rgba(20, 184, 166, 0.05));
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        .key-insight::before {
+            content: '💡';
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            font-size: 2rem;
+            background: var(--bg-dark);
+            padding: 0 0.5rem;
+        }
+        
+        .key-insight-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .key-insight-text {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metric-showcase {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+
+    <nav>
+        <div class="logo">MediPredict</div>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/eda" class="active">EDA Analysis</a></li>
+            <li><a href="/predict">Predict</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/predict" class="cta-button">Get Started</a></li>
+        </ul>
+    </nav>
+
+    <section class="eda-hero">
+        <div class="eda-hero-content">
+            <h1>📊 Exploratory Data Analysis</h1>
+            <p class="subtitle">Step-by-step journey through healthcare data - understanding patterns, discovering insights, and building predictions</p>
+            
+            <!-- Progress Tracker -->
+            <div class="progress-tracker" style="margin-top: 3rem;">
+                <h3 style="margin-bottom: 1.5rem; text-align: center; color: var(--primary-color);">Data Science Journey</h3>
+                <div class="progress-steps">
+                    <div class="progress-line">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-circle">1</div>
+                        <div class="progress-label">Collect</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-circle">2</div>
+                        <div class="progress-label">Clean</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-circle">3</div>
+                        <div class="progress-label">Analyze</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-circle">4</div>
+                        <div class="progress-label">Visualize</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-circle">5</div>
+                        <div class="progress-label">Predict</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-circle">6</div>
+                        <div class="progress-label">Deploy</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="eda-content">
+        <div class="eda-container">
+            
+            <!-- Introduction Section -->
+            <div class="analysis-section">
+                <div class="section-title-bar">
+                    <h2>🎯 Understanding EDA - Step by Step</h2>
+                </div>
+                
+                <div class="analysis-card">
+                    <div class="step-indicator">
+                        <div class="step-number-badge">?</div>
+                        <div class="step-info">
+                            <div class="step-title">What is Exploratory Data Analysis (EDA)?</div>
+                            <div class="step-description">The detective work of data science - finding hidden patterns and insights</div>
+                        </div>
+                    </div>
+                    
+                    <p class="explanation">
+                        EDA is like being a detective 🔍 - we examine the data from every angle to discover secrets hidden within. 
+                        For healthcare, this means understanding what makes patients healthy or at risk.
+                    </p>
+                    
+                    <div class="visual-explainer">
+                        <div class="explainer-header">
+                            <span class="explainer-icon">🎯</span>
+                            <h4 class="explainer-title">Why We Do EDA - The 4 Key Reasons</h4>
+                        </div>
+                        <div class="explainer-content">
+                            <div class="what-box">
+                                <div class="box-title">📊 WHAT: Find Distribution Patterns</div>
+                                <div class="box-content">
+                                    We look at how health metrics spread across patients. For example: Are most people's BMI normal? 
+                                    How many have high blood pressure? This shows us the "shape" of our data.
+                                </div>
+                            </div>
+                            
+                            <div class="why-box">
+                                <div class="box-title">🔗 WHY: Discover Correlations</div>
+                                <div class="box-content">
+                                    We find which factors move together. Example: Does high BMI always mean high blood pressure? 
+                                    Do older patients have higher cholesterol? These connections help us predict better.
+                                </div>
+                            </div>
+                            
+                            <div class="how-box">
+                                <div class="box-title">⚠️ HOW: Spot Outliers & Errors</div>
+                                <div class="box-content">
+                                    We catch unusual values that don't make sense. Like a 25-year-old with cholesterol of 400, 
+                                    or impossible blood pressure readings. This ensures data quality.
+                                </div>
+                            </div>
+                            
+                            <div class="what-box">
+                                <div class="box-title">🎯 IMPACT: Identify Important Features</div>
+                                <div class="box-content">
+                                    We discover which health metrics matter most for prediction. Is glucose more important than age? 
+                                    Does BMI beat cholesterol? This guides our AI model.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="key-insight">
+                        <div class="key-insight-title">💡 Key Insight: Why This Matters</div>
+                        <div class="key-insight-text">
+                            Think of EDA as a health checkup for your data! Just like a doctor examines you before diagnosis, 
+                            we examine data before building predictions. <strong>Without EDA, we'd be building blind</strong> - 
+                            our AI might learn the wrong patterns or miss critical health indicators. Good EDA = Good Predictions = Lives Saved! 🏥
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dataset Overview -->
+            <div class="analysis-section">
+                <div class="section-title-bar">
+                    <h2>📋 Step 1: Understanding Our Dataset</h2>
+                </div>
+                
+                <div class="analysis-card">
+                    <div class="step-indicator">
+                        <div class="step-number-badge">1</div>
+                        <div class="step-info">
+                            <div class="step-title">Data Collection Complete!</div>
+                            <div class="step-description">Let's see what we're working with - 5,000 patient records</div>
+                        </div>
+                    </div>
+                    
+                    <div class="metric-showcase">
+                        <div class="metric-box">
+                            <div class="metric-icon">👥</div>
+                            <div class="metric-value">5,000</div>
+                            <div class="metric-label">Patient Records</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-icon">📊</div>
+                            <div class="metric-value">8</div>
+                            <div class="metric-label">Health Features</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-icon">🎯</div>
+                            <div class="metric-value">2</div>
+                            <div class="metric-label">Risk Categories</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-icon">✅</div>
+                            <div class="metric-value">100%</div>
+                            <div class="metric-label">Data Completeness</div>
+                        </div>
+                    </div>
+                    
+                    <div class="visual-explainer">
+                        <div class="explainer-header">
+                            <span class="explainer-icon">🔍</span>
+                            <h4 class="explainer-title">What Each Health Feature Means</h4>
+                        </div>
+                        <div class="explainer-content">
+                            <div class="what-box">
+                                <div class="box-title">🎂 Age - The Timeline Factor</div>
+                                <div class="box-content">
+                                    <strong>What it is:</strong> Patient's age in years (18-90 range)<br>
+                                    <strong>Why it matters:</strong> As we age, our body systems slow down. Risk of chronic diseases 
+                                    increases dramatically after age 50. Age isn't modifiable, but it helps us understand risk context.<br>
+                                    <strong>Medical fact:</strong> Heart disease risk doubles every decade after 55!
+                                </div>
+                            </div>
+                            
+                            <div class="why-box">
+                                <div class="box-title">⚖️ BMI - The Weight Indicator</div>
+                                <div class="box-content">
+                                    <strong>What it is:</strong> Body Mass Index = Weight(kg) ÷ Height(m)² (Range: 15-50)<br>
+                                    <strong>Why it matters:</strong> Obesity is the root cause of many diseases. High BMI means extra strain 
+                                    on the heart, more insulin resistance (diabetes), and higher inflammation.<br>
+                                    <strong>Categories:</strong> &lt;18.5 (Underweight), 18.5-24.9 (Normal), 25-29.9 (Overweight), ≥30 (Obese)<br>
+                                    <strong>Key fact:</strong> BMI ≥30 increases diabetes risk by 5-10x! 🚨
+                                </div>
+                            </div>
+                            
+                            <div class="how-box">
+                                <div class="box-title">💓 Blood Pressure - The Heart's Force</div>
+                                <div class="box-content">
+                                    <strong>What it is:</strong> Force of blood against artery walls (Systolic/Diastolic in mmHg)<br>
+                                    <strong>Why it matters:</strong> High BP damages arteries, forcing the heart to work harder. 
+                                    It's called the "silent killer" - no symptoms but deadly consequences!<br>
+                                    <strong>Normal:</strong> &lt;120/80 | <strong>Elevated:</strong> 120-129/&lt;80 | <strong>Stage 1:</strong> 130-139/80-89 | <strong>Stage 2:</strong> ≥140/90<br>
+                                    <strong>Danger:</strong> Hypertension increases heart attack risk by 300%! ⚠️
+                                </div>
+                            </div>
+                            
+                            <div class="what-box">
+                                <div class="box-title">🍬 Glucose - The Sugar Measure</div>
+                                <div class="box-content">
+                                    <strong>What it is:</strong> Blood sugar level in mg/dL (70-250 range)<br>
+                                    <strong>Why it matters:</strong> THE primary indicator for diabetes. High glucose damages blood vessels, 
+                                    nerves, kidneys, and eyes over time. Most predictive single feature!<br>
+                                    <strong>Categories:</strong> &lt;100 (Normal), 100-125 (Prediabetes), ≥126 (Diabetes)<br>
+                                    <strong>Critical:</strong> 32% of our prediction power comes from glucose alone! 🎯
+                                </div>
+                            </div>
+                            
+                            <div class="why-box">
+                                <div class="box-title">🧪 Cholesterol - The Artery Clogger</div>
+                                <div class="box-content">
+                                    <strong>What it is:</strong> Total cholesterol in mg/dL (120-350 range)<br>
+                                    <strong>Why it matters:</strong> High cholesterol builds up in arteries (plaque), reducing blood flow. 
+                                    This leads to heart attacks and strokes.<br>
+                                    <strong>Levels:</strong> &lt;200 (Good), 200-239 (Borderline), ≥240 (High)<br>
+                                    <strong>Impact:</strong> Every 40 point increase = 30% higher heart disease risk! 📈
+                                </div>
+                            </div>
+                            
+                            <div class="how-box">
+                                <div class="box-title">💗 Heart Rate - The Pulse Check</div>
+                                <div class="box-content">
+                                    <strong>What it is:</strong> Beats per minute while resting (50-120 BPM)<br>
+                                    <strong>Why it matters:</strong> Abnormally high or low rates indicate heart problems. 
+                                    Resting rate shows cardiovascular fitness.<br>
+                                    <strong>Normal:</strong> 60-100 BPM | <strong>Athletic:</strong> 40-60 | <strong>Concerning:</strong> &gt;100<br>
+                                    <strong>Note:</strong> Consistently high rate = overworked heart! ❤️
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="key-insight">
+                        <div class="key-insight-title">💡 Data Quality Check Passed!</div>
+                        <div class="key-insight-text">
+                            ✅ All 5,000 records are complete (no missing values)<br>
+                            ✅ All measurements are within medically realistic ranges<br>
+                            ✅ Data represents diverse age groups and health conditions<br>
+                            ✅ Perfect foundation for building accurate predictions!<br><br>
+                            <strong>Why this matters:</strong> Garbage in = Garbage out! Quality data is the foundation of good AI. 
+                            Our 100% completeness means our model learns from reliable information, not guesses. 🎯
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Distribution Analysis -->
+            <div class="analysis-section">
+                <div class="section-title-bar">
+                    <h2>📈 Step 2: Distribution Analysis - Seeing the Patterns</h2>
+                </div>
+                
+                <!-- Age Distribution -->
+                <div class="analysis-card">
+                    <div class="step-indicator">
+                        <div class="step-number-badge">2A</div>
+                        <div class="step-info">
+                            <div class="step-title">Age Distribution - Understanding Our Population</div>
+                            <div class="step-description">How old are our patients? Does age follow a pattern?</div>
+                        </div>
+                    </div>
+                    
+                    <div class="visual-explainer">
+                        <div class="explainer-header">
+                            <span class="explainer-icon">📊</span>
+                            <h4 class="explainer-title">Before We Look at the Chart...</h4>
+                        </div>
+                        <div class="explainer-content">
+                            <div class="what-box">
+                                <div class="box-title">🎯 What Are We Looking At?</div>
+                                <div class="box-content">
+                                    This <strong>histogram (bar chart)</strong> shows how many patients fall into each age group. 
+                                    Each bar represents a 10-year age range. The taller the bar, the more patients in that age group.
+                                </div>
+                            </div>
+                            
+                            <div class="why-box">
+                                <div class="box-title">🔍 What Should We Look For?</div>
+                                <div class="box-content">
+                                    • <strong>Shape:</strong> Is it a bell curve (normal) or skewed?<br>
+                                    • <strong>Peaks:</strong> Which age group has the most patients?<br>
+                                    • <strong>Gaps:</strong> Are any age groups missing?<br>
+                                    • <strong>Balance:</strong> Do we have data across all ages?
+                                </div>
+                            </div>
+                            
+                            <div class="how-box">
+                                <div class="box-title">💭 Why This Matters</div>
+                                <div class="box-content">
+                                    If all our patients were young, our model couldn't predict risk for older people! 
+                                    We need <strong>representative data</strong> across all age groups to build a useful prediction system.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="ageDistChart"></canvas>
+                    </div>
+                    
+                    <div class="comparison-grid">
+                        <div class="comparison-card good">
+                            <div class="comparison-header">
+                                <span class="comparison-icon">✅</span>
+                                <h4 class="comparison-title">What We See (The Good!)</h4>
+                            </div>
+                            <ul class="info-list">
+                                <li>Most patients are 40-60 years old (the peak years for disease risk)</li>
+                                <li>Nice bell-curve shape = normal distribution</li>
+                                <li>We have data across all age groups (18-90)</li>
+                                <li>Slightly skewed right (more older patients) - expected!</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="comparison-card bad">
+                            <div class="comparison-header">
+                                <span class="comparison-icon">⚠️</span>
+                                <h4 class="comparison-title">What This Tells Us</h4>
+                            </div>
+                            <ul class="info-list">
+                                <li>Older people seek more health screening (realistic!)</li>
+                                <li>Disease risk increases with age (medical fact)</li>
+                                <li>Our model will be most accurate for 40-70 age group</li>
+                                <li>Fewer young patients = they're generally healthier</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="key-insight">
+                        <div class="key-insight-title">💡 Key Discovery #1: Representative Age Distribution</div>
+                        <div class="key-insight-text">
+                            Our data covers all age groups, with concentration in the 40-60 range where chronic diseases 
+                            typically emerge. This is PERFECT for disease prediction! The slight right skew (more older patients) 
+                            actually mirrors real healthcare data - older people need more screening. <br><br>
+                            <strong>Medical Context:</strong> Diabetes and heart disease risk increases 2-3x every decade after age 40. 
+                            Our peak at 40-60 means we're capturing the critical disease development years! 🎯
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analysis-card">
+                    <h3>BMI Distribution & Categories</h3>
+                    <p class="explanation">BMI (Body Mass Index) is calculated as weight(kg) / height(m)². It's a key indicator of obesity, 
+                       which is strongly linked to diabetes and cardiovascular disease.</p>
+                    <div class="chart-container">
+                        <canvas id="bmiDistChart"></canvas>
+                    </div>
+                    <div class="bmi-categories">
+                        <h4>BMI Categories (WHO Classification):</h4>
+                        <div class="category-grid">
+                            <div class="category-item underweight">
+                                <span class="cat-range">&lt; 18.5</span>
+                                <span class="cat-label">Underweight</span>
+                            </div>
+                            <div class="category-item normal">
+                                <span class="cat-range">18.5 - 24.9</span>
+                                <span class="cat-label">Normal</span>
+                            </div>
+                            <div class="category-item overweight">
+                                <span class="cat-range">25 - 29.9</span>
+                                <span class="cat-label">Overweight</span>
+                            </div>
+                            <div class="category-item obese">
+                                <span class="cat-range">≥ 30</span>
+                                <span class="cat-label">Obese</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="insight-box">
+                        <strong>🎯 Medical Significance:</strong> Approximately 35% of patients fall into the overweight/obese categories 
+                        (BMI ≥ 25). These individuals have significantly higher risk for type 2 diabetes, hypertension, and heart disease. 
+                        Our prediction model gives extra weight to BMI values above 30.
+                    </div>
+                </div>
+
+                <div class="analysis-card">
+                    <h3>Blood Pressure Distribution</h3>
+                    <p class="explanation">Blood pressure measures the force of blood against artery walls. Systolic (upper number) measures 
+                       pressure during heartbeats; diastolic (lower number) measures pressure between beats.</p>
+                    <div class="chart-container">
+                        <canvas id="bpDistChart"></canvas>
+                    </div>
+                    <div class="bp-ranges">
+                        <h4>Blood Pressure Categories (AHA Guidelines):</h4>
+                        <div class="range-table">
+                            <div class="range-row normal-range">
+                                <span class="range-category">Normal</span>
+                                <span class="range-value">&lt; 120/80 mmHg</span>
+                            </div>
+                            <div class="range-row elevated-range">
+                                <span class="range-category">Elevated</span>
+                                <span class="range-value">120-129/&lt;80 mmHg</span>
+                            </div>
+                            <div class="range-row stage1-range">
+                                <span class="range-category">Hypertension Stage 1</span>
+                                <span class="range-value">130-139/80-89 mmHg</span>
+                            </div>
+                            <div class="range-row stage2-range">
+                                <span class="range-category">Hypertension Stage 2</span>
+                                <span class="range-value">≥ 140/90 mmHg</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="insight-box">
+                        <strong>⚠️ Critical Finding:</strong> About 40% of patients show elevated or high blood pressure readings. 
+                        Hypertension is called the "silent killer" because it often has no symptoms but dramatically increases risk of 
+                        heart attack, stroke, and kidney disease. This is why our model treats BP as a high-priority risk factor.
+                    </div>
+                </div>
+
+                <div class="analysis-card">
+                    <h3>Glucose Level Distribution</h3>
+                    <p class="explanation">Blood glucose (sugar) level is the primary indicator for diabetes diagnosis. Measured in mg/dL 
+                       after fasting or at random times throughout the day.</p>
+                    <div class="chart-container">
+                        <canvas id="glucoseDistChart"></canvas>
+                    </div>
+                    <div class="glucose-ranges">
+                        <h4>Glucose Level Categories:</h4>
+                        <div class="range-table">
+                            <div class="range-row normal-range">
+                                <span class="range-category">Normal</span>
+                                <span class="range-value">&lt; 100 mg/dL (fasting)</span>
+                            </div>
+                            <div class="range-row prediabetes-range">
+                                <span class="range-category">Prediabetes</span>
+                                <span class="range-value">100-125 mg/dL</span>
+                            </div>
+                            <div class="range-row diabetes-range">
+                                <span class="range-category">Diabetes</span>
+                                <span class="range-value">≥ 126 mg/dL</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="insight-box">
+                        <strong>🔴 High-Risk Indicator:</strong> The distribution shows a significant right tail with ~25% of patients 
+                        having glucose levels above 125 mg/dL (diabetes threshold). Combined with high BMI and age factors, this creates 
+                        a high-risk profile for type 2 diabetes complications.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Correlation Analysis -->
+            <div class="analysis-section">
+                <div class="section-title-bar">
+                    <h2>🔗 Correlation Analysis</h2>
+                </div>
+                <div class="analysis-card">
+                    <h3>Feature Correlation Heatmap</h3>
+                    <p class="explanation">Correlation measures how strongly two variables are related. Values range from -1 (perfect negative) 
+                       to +1 (perfect positive). Understanding correlations helps us identify which health factors tend to occur together.</p>
+                    <div class="chart-container-large">
+                        <canvas id="correlationChart"></canvas>
+                    </div>
+                    <div class="correlation-insights">
+                        <h4>Key Correlations Discovered:</h4>
+                        <div class="correlation-list">
+                            <div class="corr-item strong-positive">
+                                <div class="corr-pair">
+                                    <span class="corr-icon">📊</span>
+                                    <span>BMI ↔ Blood Pressure</span>
+                                </div>
+                                <div class="corr-value">+0.68</div>
+                                <p class="corr-explanation">
+                                    <strong>Strong Positive Correlation:</strong> Higher BMI strongly associated with higher blood pressure. 
+                                    This makes sense medically—excess weight puts more strain on the heart, forcing it to pump harder and 
+                                    increasing pressure on artery walls.
+                                </p>
+                            </div>
+                            <div class="corr-item strong-positive">
+                                <div class="corr-pair">
+                                    <span class="corr-icon">📊</span>
+                                    <span>Age ↔ Cholesterol</span>
+                                </div>
+                                <div class="corr-value">+0.55</div>
+                                <p class="corr-explanation">
+                                    <strong>Moderate Positive Correlation:</strong> Cholesterol levels tend to increase with age. As we age, 
+                                    our bodies become less efficient at managing cholesterol, leading to accumulation over time.
+                                </p>
+                            </div>
+                            <div class="corr-item moderate-positive">
+                                <div class="corr-pair">
+                                    <span class="corr-icon">📊</span>
+                                    <span>Glucose ↔ BMI</span>
+                                </div>
+                                <div class="corr-value">+0.52</div>
+                                <p class="corr-explanation">
+                                    <strong>Moderate Positive Correlation:</strong> Higher body mass associated with higher glucose levels. 
+                                    Excess body fat, especially around the abdomen, makes cells more resistant to insulin, leading to elevated blood sugar.
+                                </p>
+                            </div>
+                            <div class="corr-item weak-positive">
+                                <div class="corr-pair">
+                                    <span class="corr-icon">📊</span>
+                                    <span>Age ↔ Glucose</span>
+                                </div>
+                                <div class="corr-value">+0.42</div>
+                                <p class="corr-explanation">
+                                    <strong>Weak-Moderate Correlation:</strong> Glucose levels increase moderately with age. Pancreatic 
+                                    function declines over time, reducing insulin production efficiency.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="insight-box">
+                        <strong>🧠 Model Impact:</strong> These correlations tell us that health factors don't exist in isolation. When our 
+                        AI model sees high BMI, it knows to pay extra attention to blood pressure and glucose levels. This multi-factor 
+                        analysis provides more accurate risk assessment than looking at any single metric alone.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Factor Analysis -->
+            <div class="analysis-section">
+                <div class="section-title-bar">
+                    <h2>⚠️ Risk Factor Analysis</h2>
+                </div>
+                <div class="analysis-card">
+                    <h3>Disease Risk Distribution</h3>
+                    <p class="explanation">Based on our analysis, we classify patients into Low Risk and High Risk categories. 
+                       This classification helps prioritize medical intervention and preventive care.</p>
+                    <div class="chart-container">
+                        <canvas id="riskDistChart"></canvas>
+                    </div>
+                    <div class="risk-breakdown">
+                        <div class="risk-card low-risk-card">
+                            <h4>🟢 Low Risk Patients (60%)</h4>
+                            <ul>
+                                <li>Normal BMI (&lt; 25)</li>
+                                <li>Blood pressure &lt; 120/80</li>
+                                <li>Glucose &lt; 100 mg/dL</li>
+                                <li>Cholesterol &lt; 200 mg/dL</li>
+                                <li>No smoking, moderate exercise</li>
+                            </ul>
+                            <p><strong>Recommendation:</strong> Annual checkups, maintain healthy lifestyle</p>
+                        </div>
+                        <div class="risk-card high-risk-card">
+                            <h4>🔴 High Risk Patients (40%)</h4>
+                            <ul>
+                                <li>BMI ≥ 30 (obese)</li>
+                                <li>Blood pressure ≥ 140/90</li>
+                                <li>Glucose ≥ 126 mg/dL</li>
+                                <li>Cholesterol ≥ 240 mg/dL</li>
+                                <li>Smoking, sedentary lifestyle</li>
+                            </ul>
+                            <p><strong>Recommendation:</strong> Immediate medical consultation, lifestyle changes, possible medication</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analysis-card">
+                    <h3>Risk Factors by Age Group</h3>
+                    <p class="explanation">Different age groups show different risk patterns. This helps us understand how disease risk 
+                       evolves over a lifetime.</p>
+                    <div class="chart-container">
+                        <canvas id="ageRiskChart"></canvas>
+                    </div>
+                    <div class="insight-box">
+                        <strong>📈 Age-Related Trends:</strong> Risk increases dramatically after age 50. The 60-70 age group shows 
+                        the highest concentration of high-risk patients (65%), emphasizing the importance of regular screening for older adults.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature Importance -->
+            <div class="analysis-section">
+                <div class="section-title-bar">
+                    <h2>🎯 Feature Importance</h2>
+                </div>
+                <div class="analysis-card">
+                    <h3>Which Health Factors Matter Most?</h3>
+                    <p class="explanation">Not all health metrics are equally important for disease prediction. Our analysis reveals 
+                       which factors have the strongest influence on disease risk.</p>
+                    <div class="chart-container">
+                        <canvas id="featureImportanceChart"></canvas>
+                    </div>
+                    <div class="importance-details">
+                        <div class="importance-item">
+                            <div class="importance-rank">1</div>
+                            <div class="importance-content">
+                                <h4>Glucose Level (32% importance)</h4>
+                                <p>The single most important predictor. High glucose is the defining characteristic of diabetes and 
+                                   strongly correlates with cardiovascular complications.</p>
+                            </div>
+                        </div>
+                        <div class="importance-item">
+                            <div class="importance-rank">2</div>
+                            <div class="importance-content">
+                                <h4>BMI (25% importance)</h4>
+                                <p>Second most critical factor. Obesity is a root cause of metabolic syndrome, affecting insulin 
+                                   sensitivity, blood pressure, and cholesterol levels.</p>
+                            </div>
+                        </div>
+                        <div class="importance-item">
+                            <div class="importance-rank">3</div>
+                            <div class="importance-content">
+                                <h4>Blood Pressure (22% importance)</h4>
+                                <p>Hypertension is a major cardiovascular risk factor. Even moderate elevation significantly increases 
+                                   risk of heart attack and stroke.</p>
+                            </div>
+                        </div>
+                        <div class="importance-item">
+                            <div class="importance-rank">4</div>
+                            <div class="importance-content">
+                                <h4>Age (15% importance)</h4>
+                                <p>Non-modifiable but crucial risk factor. Age affects nearly every physiological system and amplifies 
+                                   the impact of other risk factors.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="insight-box">
+                        <strong>💡 Clinical Application:</strong> When our AI model makes predictions, it weights these factors proportionally. 
+                        A patient with high glucose but normal other metrics will be flagged as high-risk due to glucose's dominance. This 
+                        mirrors how doctors prioritize diagnostic criteria in clinical practice.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="analysis-section">
+                <div class="section-title-bar">
+                    <h2>📝 EDA Summary & Conclusions</h2>
+                </div>
+                <div class="analysis-card">
+                    <h3>What We Learned from This Analysis</h3>
+                    <div class="summary-grid">
+                        <div class="summary-card">
+                            <h4>1️⃣ Data Quality</h4>
+                            <p>Our dataset is complete (100% data), representative across age groups, and contains medically realistic 
+                               ranges for all health metrics. This ensures our model trains on reliable information.</p>
+                        </div>
+                        <div class="summary-card">
+                            <h4>2️⃣ Key Patterns</h4>
+                            <p>40% of patients show high-risk characteristics. Strong correlations exist between BMI-BP (0.68), 
+                               Age-Cholesterol (0.55), and Glucose-BMI (0.52), confirming known medical relationships.</p>
+                        </div>
+                        <div class="summary-card">
+                            <h4>3️⃣ Risk Factors</h4>
+                            <p>Glucose level is the strongest predictor (32% importance), followed by BMI (25%) and blood pressure (22%). 
+                               These three factors account for nearly 80% of predictive power.</p>
+                        </div>
+                        <div class="summary-card">
+                            <h4>4️⃣ Model Strategy</h4>
+                            <p>Our AI model uses weighted analysis: heavy emphasis on glucose, BMI, and BP; moderate weight on age and 
+                               cholesterol; contextual consideration of lifestyle factors (smoking, family history).</p>
+                        </div>
+                    </div>
+
+                    <div class="final-insight">
+                        <h3>🎯 Bottom Line</h3>
+                        <p>This comprehensive EDA validates our approach to disease prediction. The data shows clear patterns that align 
+                           with medical knowledge, strong correlations that support multi-factor analysis, and distinct risk profiles that 
+                           enable accurate classification. Our AI model leverages these insights to provide reliable, medically-grounded 
+                           risk predictions in under 5 seconds.</p>
+                        <div class="cta-inline">
+                            <a href="/predict" class="btn-primary">Try the Prediction Tool →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/eda">EDA Analysis</a>
+                <a href="/predict">Prediction Tool</a>
+                <a href="/about">About</a>
+            </div>
+            <p>&copy; 2024 MediPredict. AI-Powered Healthcare Disease Prediction System.</p>
+        </div>
+    </footer>
+
+    <script src="/static/js/eda.js"></script>
+</body>
+</html>

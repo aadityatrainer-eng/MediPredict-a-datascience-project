@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediPredict - Healthcare Disease Prediction System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="grid-bg"></div>
+
+    <nav>
+        <div class="logo">MediPredict</div>
+        <ul>
+            <li><a href="/" class="active">Home</a></li>
+            <li><a href="/eda">EDA Analysis</a></li>
+            <li><a href="/predict">Predict</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/predict" class="cta-button">Get Started</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🏥 Data Science Project</div>
+            <h1>Healthcare Disease Prediction</h1>
+            <p class="subtitle">Using Machine Learning for Early Detection and Reliable Risk Assessment</p>
+            <div class="hero-buttons">
+                <a href="/predict" class="btn-primary">Try Prediction Tool</a>
+                <a href="/eda" class="btn-secondary">View EDA Analysis</a>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">6</div>
+                <div class="stat-label">Key Health Parameters</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">Real-time</div>
+                <div class="stat-label">Analysis & Prediction</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">2</div>
+                <div class="stat-label">Risk Categories</div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator"></div>
+    </section>
+
+    <!-- Challenge Section -->
+    <section class="features">
+        <div class="section-header">
+            <h2 class="section-title">The Challenge: Late Disease Detection</h2>
+            <p class="section-description">Healthcare faces critical challenges that impact patient outcomes and treatment costs</p>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚠️</div>
+                <h3 class="feature-title">Late Detection</h3>
+                <p class="feature-description">Delayed disease diagnosis significantly increases health risks for patients, often leading to more severe complications and reduced treatment options.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⏱️</div>
+                <h3 class="feature-title">Manual Analysis</h3>
+                <p class="feature-description">Traditional manual analysis is time-consuming for doctors dealing with large datasets, creating bottlenecks in patient care and diagnosis.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3 class="feature-title">Higher Costs</h3>
+                <p class="feature-description">Delayed diagnosis leads to significantly increased treatment expenses, placing financial burden on both patients and healthcare systems.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Objective -->
+    <section class="process-flow">
+        <div class="section-header">
+            <h2 class="section-title">Our Objective: Early & Reliable Detection</h2>
+            <p class="section-description">Developing a comprehensive healthcare disease prediction system using data science</p>
+        </div>
+        <div class="flow-steps">
+            <div class="flow-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Primary Goal</h3>
+                    <p>Develop a healthcare disease prediction system using data science for early and reliable detection of disease risk.</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Collect & Analyze Data</h3>
+                    <p>Utilize advanced data science techniques to process and analyze patient health information from multiple sources.</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Apply ML Models</h3>
+                    <p>Accurately predict disease risk using machine learning algorithms trained on comprehensive healthcare data.</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Support Doctors</h3>
+                    <p>Provide fast, data-driven decision assistance to healthcare professionals for better patient outcomes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Collection -->
+    <section class="features">
+        <div class="section-header">
+            <h2 class="section-title">Data Collection & Sample Dataset</h2>
+            <p class="section-description">Structured medical data gathering for disease prediction</p>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Data Sources</h3>
+                <p class="feature-description">Hospital records and public healthcare datasets providing comprehensive patient information for analysis and prediction.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3 class="feature-title">Data Types</h3>
+                <p class="feature-description">Demographic data (Age), Clinical measurements (BMI, Blood Pressure), and Lab Results (Glucose, Cholesterol) for comprehensive assessment.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🧹</div>
+                <h3 class="feature-title">Data Cleaning & Preprocessing</h3>
+                <p class="feature-description">Handle missing values, remove duplicates, correct outliers, and convert categories to ensure accurate and suitable data for analysis.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Features -->
+    <section class="why-section">
+        <div class="section-header">
+            <h2 class="section-title">Key Health Parameters</h2>
+            <p class="section-description">Important health parameters used for disease prediction</p>
+        </div>
+        <div class="why-grid">
+            <div class="why-card">
+                <div class="why-icon">🎂</div>
+                <h3>Age</h3>
+                <p>Patient age as a fundamental risk factor for disease prediction and assessment.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">⚖️</div>
+                <h3>Body Mass Index (BMI)</h3>
+                <p>Weight-to-height ratio indicating obesity and metabolic health status.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">💓</div>
+                <h3>Blood Pressure</h3>
+                <p>Systolic and diastolic measurements for cardiovascular health assessment.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">🍬</div>
+                <h3>Glucose Level</h3>
+                <p>Blood sugar measurements critical for diabetes risk prediction.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">🧪</div>
+                <h3>Cholesterol</h3>
+                <p>Total cholesterol levels indicating cardiovascular disease risk.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">💗</div>
+                <h3>Heart Rate</h3>
+                <p>Resting heart rate as an indicator of cardiovascular fitness and health.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- EDA Section -->
+    <section class="process-flow">
+        <div class="section-header">
+            <h2 class="section-title">Exploratory Data Analysis (EDA)</h2>
+            <p class="section-description">Revealing patterns and relationships in healthcare data</p>
+        </div>
+        <div class="flow-steps">
+            <div class="flow-step">
+                <div class="step-number">📊</div>
+                <div class="step-content">
+                    <h3>Visualizations</h3>
+                    <p>Bar charts, line graphs, histograms, and scatter plots to understand data distributions and trends in patient health metrics.</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-number">🔗</div>
+                <div class="step-content">
+                    <h3>Correlation Analysis</h3>
+                    <p>Measure feature dependency to identify relationships between health parameters and their impact on disease risk.</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-number">💡</div>
+                <div class="step-content">
+                    <h3>Key Insights</h3>
+                    <p>Higher glucose levels linked to diabetes risk, age correlation with disease prevalence, and BMI impact on overall health outcomes.</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-number">🎯</div>
+                <div class="step-content">
+                    <h3>Feature Selection</h3>
+                    <p>EDA helps select the most relevant features, significantly improving machine learning model performance and prediction accuracy.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Model Development -->
+    <section class="features">
+        <div class="section-header">
+            <h2 class="section-title">Model Development & Evaluation</h2>
+            <p class="section-description">Building and validating machine learning models for healthcare prediction</p>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">Feature Selection</h3>
+                <p class="feature-description">Identified important health parameters: Age, BMI, Blood Pressure, Glucose Level, Cholesterol, and Heart Rate for optimal disease prediction.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3 class="feature-title">Model Building</h3>
+                <p class="feature-description">Dataset split into training and testing sets. Applied algorithms including Logistic Regression and Decision Trees for accurate risk predictions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✅</div>
+                <h3 class="feature-title">Model Evaluation</h3>
+                <p class="feature-description">Performance validated using Accuracy, Precision, Recall, and Confusion Matrix metrics to ensure reliability before deployment.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Plan of Action -->
+    <section class="process-flow">
+        <div class="section-header">
+            <h2 class="section-title">Plan of Action: From Start to Deployment</h2>
+            <p class="section-description">Systematic approach to building the healthcare prediction system</p>
+        </div>
+        <div class="flow-steps">
+            <div class="flow-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Define Problem</h3>
+                    <p>Address the critical issue of late disease detection in healthcare systems.</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Collect & Prepare Data</h3>
+                    <p>Gather comprehensive patient health data from hospital records and healthcare datasets.</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Clean & Analyze</h3>
+                    <p>Identify patterns and insights through data preprocessing and exploratory analysis.</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Select Features</h3>
+                    <p>Identify and validate key health parameters for accurate prediction models.</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h3>Train & Evaluate</h3>
+                    <p>Build, train, and rigorously validate machine learning models for reliability.</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-number">6</div>
+                <div class="step-content">
+                    <h3>Deploy Model</h3>
+                    <p>Deploy the validated system for real-world healthcare applications and patient care.</p>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 3rem;">
+            <div class="hero-badge">✅ Outcome: System predicts disease risk (Low / High), aiding early diagnosis</div>
+        </div>
+    </section>
+
+    <!-- Benefits -->
+    <section class="why-section">
+        <div class="section-header">
+            <h2 class="section-title">Empowering Healthcare with Data Science</h2>
+            <p class="section-description">Technology's powerful role in improving patient care</p>
+        </div>
+        <div class="why-grid">
+            <div class="why-card">
+                <div class="why-icon">📊</div>
+                <h3>Data Insights</h3>
+                <p>Data science provides meaningful insights from large healthcare datasets, revealing patterns invisible to manual analysis.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">🎯</div>
+                <h3>Accurate Prediction</h3>
+                <p>Machine learning models predict disease risk, supporting evidence-based medical decisions and early intervention.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">⚡</div>
+                <h3>Reduced Risks</h3>
+                <p>Early prediction significantly lowers health risks and treatment costs through timely intervention and preventive care.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">👨‍⚕️</div>
+                <h3>Doctor Support</h3>
+                <p>Fast, data-driven decision support for medical professionals, enhancing diagnostic capabilities and patient care.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">🏥</div>
+                <h3>Preventive Healthcare</h3>
+                <p>Promotes proactive health management and preventive care strategies for better long-term outcomes.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">💡</div>
+                <h3>Innovation</h3>
+                <p>Combines healthcare expertise with machine learning technology for next-generation patient care solutions.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-box">
+            <h2>Ready to Experience Disease Risk Prediction?</h2>
+            <p>Try our prediction system and see how data science is enabling early disease detection</p>
+            <div class="hero-buttons">
+                <a href="/predict" class="btn-primary">Start Prediction Analysis</a>
+                <a href="/eda" class="btn-secondary">Explore Data Analysis</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="features">
+        <div class="section-header">
+            <h2 class="section-title">Project Team</h2>
+            <p class="section-description">Data Science Project</p>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">👨‍💻</div>
+                <h3 class="feature-title">Animesh Gupta</h3>
+                <p class="feature-description">RA2311026010375</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👨‍💻</div>
+                <h3 class="feature-title">Apurva Singh</h3>
+                <p class="feature-description">RA2311026010376</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👩‍💻</div>
+                <h3 class="feature-title">Aastha Hotwani</h3>
+                <p class="feature-description">RA2311026010389</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👨‍💻</div>
+                <h3 class="feature-title">Harsh Khetan</h3>
+                <p class="feature-description">RA2311026010421</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/eda">EDA Analysis</a>
+                <a href="/predict">Prediction Tool</a>
+                <a href="/about">About</a>
+            </div>
+            <p>&copy; 2024 MediPredict. Healthcare Disease Prediction Using Machine Learning.</p>
+            <p class="footer-note">A Data Science Project by Animesh Gupta, Apurva Singh, Aastha Hotwani & Harsh Khetan</p>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

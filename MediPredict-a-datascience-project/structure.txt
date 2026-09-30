@@ -1,0 +1,28 @@
+healthcare-prediction/
+│
+├── 📄 app.py                          # Main Flask application (Backend)
+├── 📄 requirements.txt                # Python dependencies
+├── 📄 .env.example                    # Environment variable template
+├── 📄 verify_setup.py                 # Setup verification script
+│
+├── 📚 DOCUMENTATION FILES
+│   ├── 📄 README.md                   # Complete project documentation
+│   ├── 📄 QUICKSTART.md               # 3-step quick setup guide
+│   ├── 📄 VIVA_GUIDE.md              # Complete viva preparation guide
+│   └── 📄 PROJECT_CHECKLIST.md       # Everything implemented checklist
+│
+├── 📁 templates/                      # HTML Pages (Frontend)
+│   ├── 📄 index.html                  # Home/Landing page
+│   ├── 📄 eda.html                    # EDA Analysis Dashboard (8 charts)
+│   ├── 📄 predict.html                # Disease Prediction Tool
+│   └── 📄 about.html                  # About/Documentation page
+│
+└── 📁 static/                         # Static Assets
+    │
+    ├── 📁 css/
+    │   └── 📄 style.css               # All styling (Turquoise theme)
+    │
+    └── 📁 js/
+        ├── 📄 main.js                 # General functionality
+        ├── 📄 eda.js                  # All 8 EDA charts
+        └── 📄 predict.js              # Prediction form logic
